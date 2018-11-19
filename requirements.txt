@@ -1,0 +1,8 @@
+flask_sqlalchemy
+flask
+flask_wtf
+flask_login
+requests
+flask_bcrypt
+psycopg2
+marshmallow-sqlalchemy
