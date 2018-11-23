@@ -25,10 +25,12 @@ class Student(db.Model):
     name = db.Column(db.String(120))
     gpa = db.Column(db.Float)
     courses = db.relationship('Course', backref='Students', secondary='student_course', cascade='all')
+    curriculum = db.Column('curriculum_id', db.Integer, db.ForeignKey('curriculum.id'), nullable=True)
 
-    def __init__(self, name, gpa):
+    def __init__(self, name, gpa=4, curriculum=None):
         self.name = name
         self.gpa = gpa
+        self.curriculum = curriculum
 
 
 class Course(db.Model):
@@ -45,3 +47,8 @@ class Curriculum(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
     courses = db.relationship('Course', backref='Curriculums', secondary='course_curriculum', cascade='all')
+    credits = db.Column(db.Integer)
+
+    def __init__(self, name):
+        self.name = name
+        self.credits = 0

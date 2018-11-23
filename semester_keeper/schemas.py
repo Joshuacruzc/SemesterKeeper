@@ -1,12 +1,12 @@
 from marshmallow_sqlalchemy import ModelSchema
 
-from semester_keeper.models import Student, Course, StudentCourse
+from semester_keeper.models import Student, Course, StudentCourse, Curriculum
 
 
 class StudentSchema(ModelSchema):
     class Meta:
         model = Student
-        fields = ('name', 'gpa')
+        fields = ('name', 'gpa', 'curriculum')
 
 
 student_schema = StudentSchema()
@@ -21,6 +21,16 @@ class CourseSchema(ModelSchema):
 
 course_schema = CourseSchema()
 courses_schema = CourseSchema(many=True)
+
+
+class CurriculumSchema(ModelSchema):
+    class Meta:
+        model = Curriculum
+        fields = ('name', 'credits', 'courses')
+
+
+curriculum_schema = CurriculumSchema()
+curriculums_schema = CurriculumSchema(many=True)
 
 
 class StudentCourseSchema(ModelSchema):

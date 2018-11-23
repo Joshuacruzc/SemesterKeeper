@@ -1,8 +1,9 @@
 from flask import request, jsonify
 
 from semester_keeper import app
-from semester_keeper.models import db, Student, Course, StudentCourse
-from semester_keeper.schemas import course_schema, student_course_schema, student_courses_schema, student_schema
+from semester_keeper.models import db, Student, Course, StudentCourse, Curriculum
+from semester_keeper.schemas import course_schema, student_course_schema, student_courses_schema, student_schema, \
+    curriculum_schema
 
 
 @app.route('/student', methods=['POST'])
@@ -12,7 +13,8 @@ from semester_keeper.schemas import course_schema, student_course_schema, studen
 def add_student():
     name = request.json['name']
     gpa = request.json['gpa']
-    student = Student(name, gpa)
+    curriculum = request.json['curriculum']
+    student = Student(name, gpa, curriculum)
     db.session.add(student)
     db.session.commit()
     student = student_schema.dump(student)
@@ -33,6 +35,19 @@ def add_course():
     return jsonify(course)
 
 
+@app.route('/curriculum', methods=['POST'])
+# Takes POST Request with curriculum name defined in JSON
+# Creates new curriculum entity with specified name
+# Returns Curriculum object as JSON
+def add_curriculum():
+    name = request.json['name']
+    curriculum = Curriculum(name)
+    db.session.add(curriculum)
+    db.session.commit()
+    curriculum = curriculum_schema.dump(curriculum)
+    return jsonify(curriculum)
+
+
 @app.route('/student_course', methods=['POST'])
 # Takes POST Request with student_id, course_id and grade defined in JSON.
 # Adds instance to many-to-many table between student and course
@@ -46,6 +61,16 @@ def add_student_course():
     db.session.commit()
     student_course = student_course_schema.dump(result)
     return jsonify(student_course)
+
+
+@app.route('/student/<student_id>', methods=['GET'])
+# Takes GET Request with student_id defined in the URL
+# Queries Student table to get student with specified student id
+# Returns Student object as JSON
+def get_student(student_id):
+    student = Student.query.get(student_id)
+    student = student_schema.dump(student)
+    return jsonify(student)
 
 
 @app.route('/student_courses/<student_id>', methods=['GET'])
