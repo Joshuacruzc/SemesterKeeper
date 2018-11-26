@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SemesterKeeper</title>
+</head>
+<body>
+<style>
+    caption {
+        font-size:20px;
+        font-style: oblique;
+    }
+    table {
+        width:100%;
+        border:solid 2px black;
+        margin-bottom: 50px;
+    }
+    td{
+        text-align: center;
+    }
+    li {
+        list-style-type: none;
+    }
+</style>
+<table>
+    <caption>Students</caption>
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <th>GPA</th>
+            <th>Major</th>
+            <th>Taken Courses</th>
+        </tr>
+        {% for student in students %}
+            <tr id="student-{{ student.id }}">
+                <td>
+                    {{ student.name }}
+                </td>
+                <td>
+                    {{ student.gpa }}
+                </td>
+                <td>
+                    <a href="#curriculum-{{ student.curriculum.id }}">{{ student.curriculum.name }}</a>
+                </td>
+                <td>
+                    <ul>
+                        {% for course in student.courses %}
+                            <li><a href="#course-{{ course.course_id }}">{{ course.course.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<table>
+    <caption>
+    Courses
+    </caption>
+    <tbody>
+    <tr>
+        <th>Name</th>
+        <th>Credits</th>
+    </tr>
+    {% for course in courses %}
+        <tr id="course-{{ course.id }}">
+            <td>
+                {{ course.name }}
+            </td>
+            <td>
+                {{ course.credits }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<table>
+    <caption>
+    Majors
+    </caption>
+    <tbody>
+    <tr>
+        <th>Name</th>
+        <th>Credits</th>
+        <th>Courses</th>
+    </tr>
+    {% for curriculum in curriculums %}
+        <tr id="curriculum-{{ curriculum.id }}">
+            <td>
+                {{ curriculum.name }}
+            </td>
+            <td>
+                {{ curriculum.credits }}
+            </td>
+            <td>
+                <ul>
+                    {% for course in curriculum.courses %}
+                        <li><a href="#course-{{ course.course_id }}">{{ course.course.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

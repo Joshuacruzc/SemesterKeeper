@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+<h1>Hello, {{ student.name }}</h1>
+<h2>Taken Courses:</h2>
+<ul id="taken_courses">
+</ul>
+<ul id="remaining_courses">
+
+</ul>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+    // Ajax request to fill out taken courses
+    const takenCoursesList = $('#taken_courses');
+
+    $.ajax( {
+        url:'/student_courses/' + {{ student.id }},
+        dataType: 'json',
+        success: function(response){
+            takenCoursesList.empty();
+            if (response[0].length === 0){
+                takenCoursesList.append('No courses have been taken so far.');
+            } else {
+                for (var i = 0; i < response[0].length; i++){
+                    takenCoursesList.append(response[0][1].course)
+                }
+            }
+
+        }
+
+    });
+    </script>
+{% if student.curriculum %}
+    <script>
+        const remainingCoursesList = $('#remaining_courses');
+        $.ajax( {
+            url:'/remaining_courses/' + {{ student.id }},
+            dataType: 'json',
+            success: function(response){
+                remainingCoursesList.empty();
+                if (response[0].length === 0){
+                    remainingCoursesList.append('No remaining courses from this curriculum.');
+                } else {
+                    remainingCoursesList.append('');
+                }
+
+            }
+        });
+
+    </script>
+{% else %}
+    <script>
+        const remainingCoursesList = $('#remaining_courses');
+        remainingCoursesList.append('No curriculum has been selected.')
+    </script>
+{% endif %}
+
+</body>
+</html>
