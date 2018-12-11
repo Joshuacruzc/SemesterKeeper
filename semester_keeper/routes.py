@@ -20,7 +20,7 @@ def resources():
     students = Student.query.all()
     courses = Course.query.all()
     curriculums = Curriculum.query.all()
-    return render_template('resources.html', students=students, courses=courses, curriculums=curriculums )
+    return render_template('resources.html', students=students, courses=courses, curriculums=curriculums)
 
 
 @app.route('/profile/<student_id>')
@@ -95,7 +95,6 @@ def add_student_course():
 def add_course_to_curriculum():
     curriculun_id = request.json['curriculum_id']
     course_id = request.json['course_id']
-    course = Course.query.get(course_id)
     result = CourseCurriculum(curriculum_id=curriculun_id, course_id=course_id)
     db.session.add(result)
     db.session.commit()
@@ -124,6 +123,9 @@ def get_student_courses(student_id):
 
 
 @app.route('/remaining_courses/<student_id>', methods=['GET'])
+# Takes GET Request with student_id defined in the URL
+# Looks for courses taken by student and compares them with courses in Student Curriculum
+# Returns JSON with Course instances
 def get_remaining_courses(student_id):
     remaining_courses = []
     student = Student.query.get(student_id)
@@ -134,4 +136,3 @@ def get_remaining_courses(student_id):
             remaining_courses.append(course.course)
     remaining_courses = courses_schema.dump(remaining_courses)
     return jsonify(remaining_courses)
-
