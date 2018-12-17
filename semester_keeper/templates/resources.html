@@ -96,7 +96,16 @@
             <td>
                 <ul>
                     {% for course in curriculum.courses %}
-                        <li><a href="#course-{{ course.course_id }}">{{ course.course.name }}</a></li>
+                        <li>
+                            <a href="#course-{{ course.course_id }}">{{ course.course.name }}
+                            </a>
+                            {% if course.prerequisites %}
+                                unlocked by:
+                                {% for prereq in course.prerequisites %}
+                                    <a href="#course-{{ prereq.prerequisite.course.id }}">{{ prereq.prerequisite.course.name }}</a>
+                                {% endfor %}
+                            {% endif %}
+                        </li>
                     {% endfor %}
                 </ul>
             </td>

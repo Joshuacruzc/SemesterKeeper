@@ -9,12 +9,6 @@ from semester_keeper.schemas import course_schema, student_course_schema, studen
 # --------------------------HTML routes------------------------------------------
 
 
-@app.route('/', methods=['GET'])
-def index():
-    students = Student.query.all()
-    return render_template('index.html', students=students)
-
-
 @app.route('/resources', methods=['GET'])
 def resources():
     students = Student.query.all()
