@@ -1,7 +1,7 @@
 from marshmallow.fields import Nested
 from marshmallow_sqlalchemy import ModelSchema
 
-from semester_keeper.models import Student, Course, StudentCourse, Curriculum, CourseCurriculum
+from semester_keeper.models import Student, Course, StudentCourse, Curriculum, CourseCurriculum, Semester
 
 
 class CourseSchema(ModelSchema):
@@ -13,8 +13,30 @@ course_schema = CourseSchema()
 courses_schema = CourseSchema(many=True)
 
 
+class CourseCurriculumSchema(ModelSchema):
+    course = Nested(CourseSchema)
+
+    class Meta:
+        model = CourseCurriculum
+
+
+course_curriculum_schema = CourseCurriculumSchema()
+course_curriculums_schema = CourseCurriculumSchema(many=True)
+
+
+class SemesterSchema(ModelSchema):
+    # courses = Nested(CourseCurriculumSchema)
+
+    class Meta:
+        model = Semester
+
+
+semester_schema = SemesterSchema()
+semesters_schema = SemesterSchema(many=True)
+
+
 class CurriculumSchema(ModelSchema):
-    courses = Nested(CourseSchema)
+    courses = Nested(CourseCurriculumSchema)
 
     class Meta:
         model = Curriculum
@@ -46,15 +68,3 @@ class StudentCourseSchema(ModelSchema):
 
 student_course_schema = StudentCourseSchema()
 student_courses_schema = StudentCourseSchema(many=True)
-
-
-class CourseCurriculumSchema(ModelSchema):
-    course = Nested(CourseSchema)
-    curriculum = Nested(CurriculumSchema)
-
-    class Meta:
-        model = CourseCurriculum
-
-
-course_curriculum_schema = CourseCurriculumSchema()
-course_curriculums_schema = CourseCurriculumSchema(many=True)

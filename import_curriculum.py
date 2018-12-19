@@ -10,7 +10,7 @@ def import_curriculum(name):
     for line in file:
         line = line.split()
         print(line)
-        course = Course(name=line[0], credits=int(line[1]))
+        course = Course(department=line[0][:4], course_num=line[0][4:], credits=int(line[1]))
         db.session.add(course)
         course_curriculum = CourseCurriculum(curriculum=curriculum, course=course)
         db.session.add(course_curriculum)
@@ -22,9 +22,11 @@ def import_curriculum(name):
             courses = line[3].split(',')
             for prereq in courses:
                 prerequisite = CourseCurriculum.query.filter_by(curriculum=curriculum,
-                                                                course=Course.query.filter_by(name=prereq).first()).first()
-                PreReqCourse(prerequisite=prerequisite,
+                                                                course=Course.query.get(prereq)).first()
+                prereq = PreReqCourse(prerequisite=prerequisite,
                              unlocked=course_curriculum)
+                db.session.add(prereq)
+
     db.session.commit()
 
 

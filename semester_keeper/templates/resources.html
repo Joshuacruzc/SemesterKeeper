@@ -66,7 +66,7 @@
     {% for course in courses %}
         <tr id="course-{{ course.id }}">
             <td>
-                {{ course.name }}
+                {{ course.id }}
             </td>
             <td>
                 {{ course.credits }}
@@ -97,7 +97,8 @@
                 <ul>
                     {% for course in curriculum.courses %}
                         <li>
-                            <a href="#course-{{ course.course_id }}">{{ course.course.name }}
+                            <a href="#course-{{ course.course_id }}">
+                                {{ course.course.id }} : level : {{ course.level }}
                             </a>
                             {% if course.prerequisites %}
                                 unlocked by:

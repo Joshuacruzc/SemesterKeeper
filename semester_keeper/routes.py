@@ -3,12 +3,19 @@ from flask import request, jsonify, render_template
 from semester_keeper import app
 from semester_keeper.models import db, Student, Course, StudentCourse, Curriculum, CourseCurriculum
 from semester_keeper.schemas import course_schema, student_course_schema, student_courses_schema, student_schema, \
-    curriculum_schema, course_curriculum_schema, courses_schema
+    curriculum_schema, course_curriculum_schema, courses_schema, semesters_schema
+
+
+# ---------------------------Test Routes ----------------------------------------
+@app.route('/organize/<curriculum_id>', methods=['GET'])
+def organize_curriculum(curriculum_id):
+    curriculum = Curriculum.query.get(curriculum_id)
+    curriculum.organize()
+    semesters = semesters_schema.dump(curriculum.semesters)
+    return jsonify(semesters)
 
 
 # --------------------------HTML routes------------------------------------------
-
-
 @app.route('/resources', methods=['GET'])
 def resources():
     students = Student.query.all()
@@ -22,9 +29,8 @@ def profile(student_id):
     student = Student.query.get(student_id)
     return render_template('profile.html', student=student)
 
+
 # --------------------------API Endpoints----------------------------------------
-
-
 @app.route('/student', methods=['POST'])
 # Takes POST Request with student name and gpa keys defined in JSON
 # Creates new student with specified name and GPA
@@ -111,7 +117,7 @@ def get_student(student_id):
 # Queries StudentCourse table to get all courses taken by this student
 # Returns JSON with StudentCourse instances with specified student_id
 def get_student_courses(student_id):
-    student_courses = StudentCourse.query.filter_by(student=student_id)
+    student_courses = StudentCourse.query.filter_by(student_id=student_id)
     student_courses = student_courses_schema.dump(student_courses)
     return jsonify(student_courses)
 
