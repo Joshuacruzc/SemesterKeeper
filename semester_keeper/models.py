@@ -43,7 +43,8 @@ class Curriculum(db.Model):
         for path in paths:
             for course in path[0]:
                 available_semesters = course.curriculum.semesters
-                semester_position = course.level
+                semester_position = course.get_soonest_semester()
+
                 for position in range(semester_position, len(available_semesters)):
                     if course.course.credits <= available_semesters[position].free_space:
                         available_semesters[position].add_course(course)
@@ -113,6 +114,13 @@ class CourseCurriculum(db.Model):
     def __init__(self, *args, **kwargs):
         super(CourseCurriculum, self).__init__(*args, **kwargs)
         self.curriculum.credits += self.course.credits
+
+    def get_soonest_semester(self):
+        position = self.level
+        for course in self.prerequisite:
+            if course.prerequisite.semester:
+                position = max(position, course.prerequisite.semester.position + 1)
+        return position
 
     def __repr__(self):
         return f"{self.curriculum}, {self.course}"

@@ -3,7 +3,7 @@ from flask import request, jsonify, render_template
 from semester_keeper import app
 from semester_keeper.models import db, Student, Course, StudentCourse, Curriculum, CourseCurriculum
 from semester_keeper.schemas import course_schema, student_course_schema, student_courses_schema, student_schema, \
-    curriculum_schema, course_curriculum_schema, courses_schema, semesters_schema
+    curriculum_schema, course_curriculum_schema, courses_schema
 
 
 # ---------------------------Test Routes ----------------------------------------
@@ -11,8 +11,10 @@ from semester_keeper.schemas import course_schema, student_course_schema, studen
 def organize_curriculum(curriculum_id):
     curriculum = Curriculum.query.get(curriculum_id)
     curriculum.organize()
-    semesters = semesters_schema.dump(curriculum.semesters)
-    return jsonify(semesters)
+    # semesters = semesters_schema.dump(curriculum.semesters)
+    semesters = curriculum.semesters
+    semesters.sort(key=lambda x: x.position)
+    return render_template('curriculum.html', semesters=curriculum.semesters)
 
 
 # --------------------------HTML routes------------------------------------------

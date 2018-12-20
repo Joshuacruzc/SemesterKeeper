@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Curriculum</title>
+</head>
+<body>
+    {% for semester in semesters %}
+        <h1>Semester {{ semester.position }}</h1>
+            <ul>
+            {% for course in semester.courses %}
+                <li>{{ course.course.id }}</li>
+            {% endfor %}
+            </ul>
+    {% endfor %}
+</body>
+</html>
